@@ -70,7 +70,7 @@ app.use((err, req, res, next) => {
 })
 
 // Start server
-app.listen(PORT, () => {
+app.listen(PORT,'0.0.0.0', () => {
   console.log(`🚀 ZIFA Portal API server running on port ${PORT}`)
   console.log(`📡 Database: 161.97.183.92/zifa_portal`)
   console.log(`🌐 API URL: http://localhost:${PORT}`)
