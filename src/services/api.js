@@ -1,5 +1,5 @@
 // API Service for connecting to backend
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api'
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://161.97.183.92:3001/api'
 
 // Helper function to get auth token
 export const getAuthToken = () => {
@@ -51,7 +51,7 @@ const apiRequest = async (endpoint, options = {}) => {
     
     // Handle connection errors
     if (error.message.includes('Failed to fetch') || error.message.includes('ERR_CONNECTION_REFUSED')) {
-      throw new Error('Cannot connect to server. Please make sure the backend server is running on http://localhost:3001')
+      throw new Error('Cannot connect to server. Please make sure the backend server is running on http://161.97.183.92:3001')
     }
     
     throw error
