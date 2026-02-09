@@ -13,42 +13,42 @@
       <ul class="nav-menu" :class="{ active: mobileMenuOpen }">
         <li class="nav-item">
           <router-link to="/" class="nav-link" @click="closeMobileMenu">
-            <i class="fas fa-home"></i> Home
+            <span class="hover-underline-animation">Home</span>
           </router-link>
         </li>
         <li class="nav-item">
           <router-link to="/players" class="nav-link" @click="closeMobileMenu">
-            <i class="fas fa-database"></i> Players
+            <span class="hover-underline-animation">Players</span>
           </router-link>
         </li>
         <li class="nav-item">
           <router-link to="/coaches" class="nav-link" @click="closeMobileMenu">
-            <i class="fas fa-user-tie"></i> Coaches
+            <span class="hover-underline-animation">Coaches</span>
           </router-link>
         </li>
         <li class="nav-item">
           <router-link to="/referees" class="nav-link" @click="closeMobileMenu">
-            <i class="fas fa-whistle"></i> Referees
+            <span class="hover-underline-animation">Referees</span>
           </router-link>
         </li>
         <li class="nav-item">
           <router-link to="/registration" class="nav-link" @click="closeMobileMenu">
-            <i class="fas fa-clipboard-list"></i> Registration
+            <span class="hover-underline-animation">Registration</span>
           </router-link>
         </li>
         <li class="nav-item" v-if="authStore.isAuthenticated">
           <router-link to="/dashboard" class="nav-link" @click="closeMobileMenu">
-            <i class="fas fa-user"></i> Dashboard
+            <span class="hover-underline-animation">Dashboard</span>
           </router-link>
         </li>
         <li class="nav-item">
           <a href="#" class="nav-link" @click.prevent="showLoginModal">
-            <i class="fas fa-sign-in-alt"></i> {{ authStore.isAuthenticated ? authStore.user.name : 'Login' }}
+            <span class="hover-underline-animation">{{ authStore.isAuthenticated ? authStore.user.name : 'Login' }}</span>
           </a>
         </li>
         <li class="nav-item" v-if="authStore.isAuthenticated">
           <a href="#" class="nav-link" @click.prevent="handleLogout">
-            <i class="fas fa-sign-out-alt"></i> Logout
+            <span class="hover-underline-animation">Logout</span>
           </a>
         </li>
       </ul>
@@ -174,10 +174,13 @@ onUnmounted(() => {
 }
 
 .logo-text {
-  font-size: 1.5rem;
-  font-weight: 700;
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.8rem;
+  font-weight: normal;
+  font-style: italic;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
   color: var(--primary-green);
-  letter-spacing: 0.5px;
 }
 
 .nav-menu {
@@ -191,9 +194,10 @@ onUnmounted(() => {
 }
 
 .nav-link {
+  font-family: 'Inter', sans-serif;
   color: var(--text-medium);
-  font-weight: 500;
-  font-size: 0.95rem;
+  font-weight: 600;
+  font-size: 1.1rem;
   padding: 8px 12px;
   transition: all 0.3s ease;
   display: flex;
@@ -214,9 +218,33 @@ onUnmounted(() => {
   font-weight: 600;
 }
 
-.nav-link i {
-  margin-right: 8px;
-  font-size: 0.9rem;
+.nav-link .hover-underline-animation {
+  position: relative;
+  color: inherit;
+  padding-bottom: 4px;
+}
+
+.nav-link .hover-underline-animation:after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  transform: scaleX(0);
+  height: 2px;
+  bottom: 0;
+  left: 0;
+  background: linear-gradient(90deg, var(--primary-green) 0%, var(--gold) 100%);
+  transform-origin: bottom right;
+  transition: transform 0.25s ease-out;
+}
+
+.nav-link:hover .hover-underline-animation:after {
+  transform: scaleX(1);
+  transform-origin: bottom left;
+}
+
+.nav-link.router-link-active .hover-underline-animation:after {
+  transform: scaleX(1);
+  transform-origin: bottom left;
 }
 
 

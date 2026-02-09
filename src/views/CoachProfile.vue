@@ -385,19 +385,17 @@ onMounted(async () => {
 }
 
 .coach-photo {
-  width: 180px;
-  height: 180px;
-  border-radius: 50%;
-  border: 5px solid white;
+  width: 200px;
+  height: 280px;
+  border-radius: 16px;
   object-fit: cover;
   box-shadow: 0 5px 15px rgba(0,0,0,0.3);
 }
 
 .coach-photo-placeholder {
-  width: 180px;
-  height: 180px;
-  border-radius: 50%;
-  border: 5px solid white;
+  width: 200px;
+  height: 280px;
+  border-radius: 16px;
   background: linear-gradient(135deg, var(--primary-green) 0%, var(--dark-green) 100%);
   display: flex;
   align-items: center;

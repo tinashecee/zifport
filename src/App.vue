@@ -66,6 +66,15 @@ onUnmounted(() => {
   font-display: swap;
 }
 
+/* Fallback if font files don't exist - use system fonts with expanded feel */
+@supports not (font-display: swap) {
+  @font-face {
+    font-family: 'Kapra Neue Pro';
+    src: local('Arial Narrow'), local('Arial'), local('Helvetica');
+    font-stretch: expanded;
+  }
+}
+
 /* Global CSS Variables - Modern Theme with Green & Gold Accents */
 :root {
   --primary-green: #1E7E34;
@@ -98,23 +107,74 @@ onUnmounted(() => {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Kapra Neue Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
-  font-weight: normal;
-  font-style: normal;
-  font-stretch: expanded;
 }
 
 body {
-  font-family: 'Kapra Neue Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
-  font-weight: normal;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+  font-weight: 400;
+  font-size: clamp(16px, 2vw, 20px);
   font-style: normal;
-  font-stretch: expanded;
   background: var(--white);
-  color: var(--text-dark);
+  color: #4a5568;
+  letter-spacing: 0.01em;
+  line-height: 1.65;
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   scroll-behavior: smooth;
+}
+
+/* Heading Styles */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: normal;
+  font-style: italic;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  color: #1a2b4f;
+}
+
+h1 {
+  font-size: clamp(32px, 5vw, 56px);
+  margin-bottom: 1.5rem;
+}
+
+h2 {
+  font-size: clamp(28px, 4vw, 48px);
+  margin-bottom: 1.25rem;
+}
+
+h3 {
+  font-size: clamp(24px, 3.5vw, 40px);
+  margin-bottom: 1rem;
+}
+
+h4 {
+  font-size: clamp(20px, 3vw, 32px);
+  margin-bottom: 0.875rem;
+}
+
+h5 {
+  font-size: clamp(18px, 2.5vw, 24px);
+  margin-bottom: 0.75rem;
+}
+
+h6 {
+  font-size: clamp(16px, 2vw, 20px);
+  margin-bottom: 0.5rem;
+}
+
+/* Paragraph Styles */
+p {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 400;
+  font-size: clamp(16px, 2vw, 20px);
+  color: #4a5568;
+  letter-spacing: 0.01em;
+  line-height: 1.65;
+  max-width: 700px;
+  margin-bottom: 1rem;
 }
 
 a {
@@ -152,9 +212,11 @@ main {
 }
 
 .btn span {
+  font-family: 'Inter', sans-serif;
   padding-bottom: 7px;
   letter-spacing: 4px;
-  font-size: 14px;
+  font-size: 16px;
+  font-weight: 700;
   padding-right: 15px;
   text-transform: uppercase;
   position: relative;
@@ -249,10 +311,15 @@ main {
 
 /* Section Titles */
 .section-title {
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: var(--text-dark);
-  margin-bottom: 16px;
+  font-family: 'Poppins', sans-serif;
+  font-size: clamp(28px, 4vw, 48px);
+  font-weight: normal;
+  font-style: italic;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  color: #1a2b4f;
+  margin-bottom: 1.5rem;
   position: relative;
   display: inline-block;
 }

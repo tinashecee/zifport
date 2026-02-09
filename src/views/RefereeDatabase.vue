@@ -194,10 +194,16 @@ onMounted(async () => {
 }
 
 .section-title {
+  font-family: 'Poppins', sans-serif;
   text-align: center;
   margin-bottom: 40px;
-  color: var(--dark-green);
-  font-size: 2.2rem;
+  color: #1a2b4f;
+  font-size: clamp(28px, 4vw, 48px);
+  font-weight: normal;
+  font-style: italic;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
   position: relative;
 }
 
@@ -234,16 +240,20 @@ onMounted(async () => {
 }
 
 .form-label {
+  font-family: 'Inter', sans-serif;
   margin-bottom: 8px;
   font-weight: 600;
-  color: var(--dark-gray);
+  font-size: 1rem;
+  color: #1a2b4f;
 }
 
 .form-input, .form-select {
+  font-family: 'Inter', sans-serif;
   padding: 12px 15px;
   border: 1px solid #ddd;
   border-radius: 4px;
   font-size: 1rem;
+  font-weight: 400;
   transition: border 0.3s;
 }
 
@@ -253,14 +263,17 @@ onMounted(async () => {
 }
 
 .search-btn {
+  font-family: 'Inter', sans-serif;
   grid-column: 1 / -1;
   background-color: var(--primary-green);
   color: white;
   padding: 15px;
   border: none;
   border-radius: 4px;
-  font-weight: 600;
+  font-weight: 700;
   font-size: 1.1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
   cursor: pointer;
   transition: background-color 0.3s;
 }
@@ -314,9 +327,15 @@ onMounted(async () => {
 }
 
 .results-table th {
+  font-family: 'Poppins', sans-serif;
   padding: 18px 15px;
   text-align: left;
-  font-weight: 600;
+  font-weight: 800;
+  font-style: italic;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  font-size: 0.95rem;
+  color: #1a2b4f;
   background-color: white;
 }
 
@@ -330,17 +349,25 @@ onMounted(async () => {
 }
 
 .results-table td {
+  font-family: 'Inter', sans-serif;
   padding: 15px;
+  font-size: 1rem;
+  font-weight: 400;
+  color: #4a5568;
 }
 
 .referee-name {
+  font-family: 'Inter', sans-serif;
   font-weight: 600;
-  color: var(--dark-gray);
+  font-size: 1.05rem;
+  color: #1a2b4f;
 }
 
 .referee-id {
-  color: var(--medium-gray);
-  font-size: 0.9rem;
+  font-family: 'Inter', sans-serif;
+  color: #4a5568;
+  font-size: 0.95rem;
+  font-weight: 400;
 }
 
 .level-badge {
@@ -377,12 +404,16 @@ onMounted(async () => {
 }
 
 .action-btn {
+  font-family: 'Inter', sans-serif;
   padding: 6px 12px;
   background-color: transparent;
   border: 1px solid var(--primary-green);
   color: var(--primary-green);
   border-radius: 4px;
-  font-weight: 600;
+  font-weight: 700;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
   cursor: pointer;
   transition: all 0.3s;
 }

@@ -257,9 +257,14 @@ const close = () => {
 }
 
 .modal-header h2 {
-  color: var(--text-dark);
-  font-size: 2rem;
-  font-weight: 700;
+  font-family: 'Poppins', sans-serif;
+  color: #1a2b4f;
+  font-size: clamp(24px, 3vw, 32px);
+  font-weight: normal;
+  font-style: italic;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
 }
 
 .modal-form .form-group {
@@ -267,21 +272,24 @@ const close = () => {
 }
 
 .form-label {
+  font-family: 'Inter', sans-serif;
   display: block;
   margin-bottom: 8px;
   font-weight: 600;
-  color: var(--dark-gray);
+  font-size: 1rem;
+  color: #1a2b4f;
 }
 
 .form-input,
 .form-select {
+  font-family: 'Inter', sans-serif;
   width: 100%;
   padding: 12px 16px;
   border: 2px solid #e0e0e0;
   border-radius: var(--border-radius);
   font-size: 1rem;
+  font-weight: 400;
   transition: all 0.3s ease;
-  font-family: 'Poppins', sans-serif;
 }
 
 .form-input:focus,

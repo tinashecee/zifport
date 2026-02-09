@@ -244,11 +244,16 @@ onMounted(async () => {
 }
 
 .section-title {
+  font-family: 'Poppins', sans-serif;
   text-align: center;
   margin-bottom: 48px;
-  color: var(--text-dark);
-  font-size: 2.5rem;
-  font-weight: 700;
+  color: #1a2b4f;
+  font-size: clamp(28px, 4vw, 48px);
+  font-weight: normal;
+  font-style: italic;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
   position: relative;
   display: inline-block;
   width: 100%;
@@ -288,18 +293,21 @@ onMounted(async () => {
 }
 
 .form-label {
+  font-family: 'Inter', sans-serif;
   margin-bottom: 8px;
   font-weight: 600;
-  color: var(--dark-gray);
+  font-size: 1rem;
+  color: #1a2b4f;
 }
 
 .form-input, .form-select {
+  font-family: 'Inter', sans-serif;
   padding: 12px 16px;
   border: 2px solid #e0e0e0;
   border-radius: var(--border-radius);
   font-size: 1rem;
+  font-weight: 400;
   transition: all 0.3s ease;
-  font-family: 'Poppins', sans-serif;
 }
 
 .form-input:focus, .form-select:focus {
@@ -309,14 +317,17 @@ onMounted(async () => {
 }
 
 .search-btn {
+  font-family: 'Inter', sans-serif;
   grid-column: 1 / -1;
   background-color: var(--primary-green);
   color: white;
   padding: 14px 24px;
   border: none;
   border-radius: var(--border-radius);
-  font-weight: 600;
-  font-size: 1rem;
+  font-weight: 700;
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 4px 12px rgba(30, 126, 52, 0.2);
@@ -341,12 +352,16 @@ onMounted(async () => {
 }
 
 .toggle-btn {
+  font-family: 'Inter', sans-serif;
   padding: 10px 20px;
   background-color: white;
   border: 2px solid var(--primary-green);
   color: var(--primary-green);
   border-radius: var(--border-radius);
-  font-weight: 600;
+  font-weight: 700;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
   cursor: pointer;
   transition: all 0.3s ease;
 }
@@ -389,9 +404,15 @@ onMounted(async () => {
 }
 
 .results-table th {
+  font-family: 'Poppins', sans-serif;
   padding: 18px 15px;
   text-align: left;
-  font-weight: 600;
+  font-weight: 800;
+  font-style: italic;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  font-size: 0.95rem;
+  color: #1a2b4f;
   background-color: white;
 }
 
@@ -405,17 +426,25 @@ onMounted(async () => {
 }
 
 .results-table td {
+  font-family: 'Inter', sans-serif;
   padding: 15px;
+  font-size: 1rem;
+  font-weight: 400;
+  color: #4a5568;
 }
 
 .player-name {
+  font-family: 'Inter', sans-serif;
   font-weight: 600;
-  color: var(--dark-gray);
+  font-size: 1.05rem;
+  color: #1a2b4f;
 }
 
 .player-club {
-  color: var(--medium-gray);
-  font-size: 0.9rem;
+  font-family: 'Inter', sans-serif;
+  color: #4a5568;
+  font-size: 0.95rem;
+  font-weight: 400;
 }
 
 .player-position {
@@ -457,12 +486,16 @@ onMounted(async () => {
 }
 
 .action-btn {
+  font-family: 'Inter', sans-serif;
   padding: 8px 16px;
   background-color: transparent;
   border: 2px solid var(--primary-green);
   color: var(--primary-green);
   border-radius: var(--border-radius);
-  font-weight: 600;
+  font-weight: 700;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
   cursor: pointer;
   transition: all 0.3s ease;
   margin-right: 8px;

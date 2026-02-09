@@ -172,31 +172,40 @@ const scrollToContent = () => {
 }
 
 .hero-title {
-  font-size: 4rem;
-  font-weight: 900;
-  margin-bottom: 1rem;
-  text-shadow: 2px 4px 8px rgba(0, 0, 0, 0.5);
-  letter-spacing: -2px;
+  font-family: 'Poppins', sans-serif;
+  font-size: clamp(32px, 5vw, 56px);
+  font-weight: normal;
+  font-style: italic;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
   line-height: 1.1;
+  margin-bottom: 1.5rem;
+  text-shadow: 2px 4px 8px rgba(0, 0, 0, 0.5);
   color: var(--white);
 }
 
 .hero-subtitle {
-  font-size: 1.75rem;
-  font-weight: 600;
+  font-family: 'Poppins', sans-serif;
+  font-size: clamp(20px, 3vw, 32px);
+  font-weight: 800;
+  font-style: italic;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
   margin-bottom: 1.5rem;
   color: var(--gold);
   text-shadow: 1px 2px 4px rgba(0, 0, 0, 0.5);
-  letter-spacing: 0.5px;
+  line-height: 1.2;
 }
 
 .hero-description {
-  font-size: 1.15rem;
+  font-family: 'Inter', sans-serif;
+  font-size: clamp(16px, 2vw, 20px);
   font-weight: 400;
   margin-bottom: 2.5rem;
-  line-height: 1.8;
+  line-height: 1.65;
   color: var(--text-light);
-  max-width: 800px;
+  letter-spacing: 0.01em;
+  max-width: 700px;
   margin-left: auto;
   margin-right: auto;
   opacity: 0.95;
@@ -252,6 +261,21 @@ const scrollToContent = () => {
   z-index: 1;
 }
 
+.hero-btns .btn-primary,
+.hero-btns .btn-secondary {
+  color: white;
+}
+
+.hero-btns .btn-primary .hover-underline-animation:after,
+.hero-btns .btn-secondary .hover-underline-animation:after {
+  background: linear-gradient(90deg, white 0%, rgba(255, 255, 255, 0.8) 100%);
+}
+
+.hero-btns .btn-primary svg path,
+.hero-btns .btn-secondary svg path {
+  fill: white;
+}
+
 .admin-section {
   background: var(--light-gray);
   padding: 80px 0;
@@ -259,11 +283,16 @@ const scrollToContent = () => {
 }
 
 .section-title {
+  font-family: 'Poppins', sans-serif;
   text-align: center;
   margin-bottom: 48px;
-  color: var(--text-dark);
-  font-size: 2.5rem;
-  font-weight: 700;
+  color: #1a2b4f;
+  font-size: clamp(28px, 4vw, 48px);
+  font-weight: normal;
+  font-style: italic;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
   position: relative;
   display: inline-block;
   width: 100%;
@@ -319,17 +348,25 @@ const scrollToContent = () => {
 }
 
 .admin-card h3 {
+  font-family: 'Poppins', sans-serif;
   margin-bottom: 12px;
-  color: var(--text-dark);
-  font-size: 1.5rem;
-  font-weight: 600;
+  color: #1a2b4f;
+  font-size: clamp(20px, 3vw, 32px);
+  font-weight: normal;
+  font-style: italic;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
 }
 
 .admin-card p {
-  color: var(--text-medium);
+  font-family: 'Inter', sans-serif;
+  color: #4a5568;
   margin-bottom: 24px;
-  line-height: 1.6;
-  font-size: 0.95rem;
+  line-height: 1.65;
+  font-size: clamp(16px, 2vw, 18px);
+  letter-spacing: 0.01em;
+  font-weight: 400;
 }
 
 .action-btn {
@@ -366,16 +403,16 @@ const scrollToContent = () => {
   }
 
   .hero-title {
-    font-size: 2.5rem;
-    letter-spacing: -1px;
+    font-size: clamp(32px, 5vw, 40px);
+    letter-spacing: -0.01em;
   }
 
   .hero-subtitle {
-    font-size: 1.4rem;
+    font-size: clamp(18px, 3vw, 24px);
   }
 
   .hero-description {
-    font-size: 1rem;
+    font-size: clamp(14px, 2vw, 18px);
   }
   
   .hero-btns {
