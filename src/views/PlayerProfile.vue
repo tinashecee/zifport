@@ -16,9 +16,20 @@
     </div>
 
     <div v-else-if="player" class="profile-content">
-        <button class="back-btn" @click="$router.back()">
-          <i class="fas fa-arrow-left"></i> Back
-        </button>
+        <div class="profile-actions">
+          <button class="back-btn" @click="$router.back()">
+            <i class="fas fa-arrow-left"></i> Back
+          </button>
+          <button class="btn btn-edit-profile" @click="showEditModal = true">
+            <i class="fas fa-edit"></i> Edit Player
+          </button>
+        </div>
+        <EditPlayerModal
+          :is-open="showEditModal"
+          :player="player"
+          @close="showEditModal = false"
+          @saved="onPlayerSaved"
+        />
 
         <!-- Player Header -->
         <div class="player-header">
@@ -320,11 +331,12 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { usePlayersStore } from '@/stores/players'
 import { playersAPI } from '@/services/api'
 import PlayerStats from '@/components/dashboard/PlayerStats.vue'
+import EditPlayerModal from '@/components/common/EditPlayerModal.vue'
 
 const route = useRoute()
 const playersStore = usePlayersStore()
@@ -332,6 +344,26 @@ const player = ref(null)
 const loading = ref(true)
 const error = ref(null)
 const activeTab = ref('overview')
+const showEditModal = ref(false)
+
+async function loadPlayer() {
+  loading.value = true
+  error.value = null
+  try {
+    const data = await playersAPI.getById(route.params.id)
+    player.value = data.player || data
+  } catch (err) {
+    error.value = err.message || 'Failed to load player'
+    console.error('Error loading player:', err)
+  } finally {
+    loading.value = false
+  }
+}
+
+function onPlayerSaved() {
+  showEditModal.value = false
+  loadPlayer()
+}
 
 const playerName = computed(() => {
   if (!player.value) return ''
@@ -387,19 +419,17 @@ const getAvailabilityText = (availability) => {
   return texts[availability] || 'Unknown'
 }
 
-onMounted(async () => {
-  loading.value = true
-  error.value = null
-  try {
-    const data = await playersAPI.getById(route.params.id)
-    player.value = data.player || data
-  } catch (err) {
-    error.value = err.message || 'Failed to load player'
-    console.error('Error loading player:', err)
-  } finally {
-    loading.value = false
-  }
+onMounted(() => {
+  loadPlayer()
 })
+
+watch(() => route.query.edit, (edit) => {
+  if (edit === '1' && player.value) showEditModal.value = true
+}, { immediate: false })
+
+watch(player, (p) => {
+  if (p && route.query.edit === '1') showEditModal.value = true
+}, { immediate: true })
 </script>
 
 <style scoped>
@@ -409,23 +439,50 @@ onMounted(async () => {
   background-color: #f5f5f5;
 }
 
+.profile-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 20px 20px 0;
+  position: relative;
+  z-index: 10;
+}
+
 .back-btn {
   background: none;
   border: none;
   color: var(--primary-green);
   font-size: 1rem;
   cursor: pointer;
-  margin: 20px 0 0 20px;
   padding: 8px 0;
   font-weight: 600;
   transition: all 0.3s ease;
-  position: relative;
-  z-index: 10;
 }
 
 .back-btn:hover {
   text-decoration: underline;
   transform: translateX(-5px);
+}
+
+.btn-edit-profile {
+  padding: 10px 20px;
+  border-radius: var(--border-radius);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  background: var(--primary-green);
+  color: white;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: background 0.2s;
+}
+
+.btn-edit-profile:hover {
+  background: var(--dark-green, #0d5c1f);
 }
 
 /* Player Header */

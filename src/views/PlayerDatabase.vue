@@ -228,8 +228,7 @@ const viewPlayer = (id) => {
 }
 
 const editPlayer = (id) => {
-  // For now, just view the player
-  viewPlayer(id)
+  router.push({ path: `/player/${id}`, query: { edit: '1' } })
 }
 
 onMounted(async () => {

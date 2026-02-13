@@ -30,6 +30,15 @@
 
       <div class="form-row">
         <div class="form-group">
+          <label class="form-label" for="coachDob">Date of Birth</label>
+          <input 
+            type="date" 
+            id="coachDob" 
+            class="form-input" 
+            v-model="form.dob"
+          >
+        </div>
+        <div class="form-group">
           <label class="form-label" for="coachExperience">Years of Experience *</label>
           <input 
             type="number" 
@@ -41,17 +50,30 @@
             required
           >
         </div>
+      </div>
 
+      <div class="form-row">
         <div class="form-group">
           <label class="form-label" for="coachClub">Club/Team</label>
-          <input 
-            type="text" 
-            id="coachClub" 
-            class="form-input" 
-            v-model="form.club"
-            placeholder="Enter club or team name"
+          <select id="coachClub" class="form-select" v-model="form.clubSelect">
+            <option value="">Select club (optional)</option>
+            <option v-for="club in clubs" :key="club.id" :value="String(club.id)">{{ club.name }}</option>
+            <option value="new">My club is not listed — add new</option>
+          </select>
+          <button
+            v-if="form.clubSelect === 'new'"
+            type="button"
+            class="btn btn-outline btn-add-club"
+            @click="showAddClubModal = true"
           >
+            <span class="hover-underline-animation">Add new club</span>
+          </button>
         </div>
+        <AddClubModal
+          :is-open="showAddClubModal"
+          @close="showAddClubModal = false"
+          @saved="onClubSaved"
+        />
       </div>
 
       <div class="form-row">
@@ -118,16 +140,21 @@
 </template>
 
 <script setup>
-import { reactive, ref } from 'vue'
+import { reactive, ref, onMounted } from 'vue'
 import { useCoachesStore } from '@/stores/coaches'
+import { clubsAPI } from '@/services/api'
+import AddClubModal from '@/components/common/AddClubModal.vue'
 
 const coachesStore = useCoachesStore()
+const clubs = ref([])
+const showAddClubModal = ref(false)
 
 const form = reactive({
   name: '',
+  dob: '',
   licenseLevel: '',
   experience: 0,
-  club: '',
+  clubSelect: '',
   contact: {
     email: '',
     phone: ''
@@ -139,11 +166,30 @@ const error = ref('')
 const success = ref(false)
 const submitting = ref(false)
 
+onMounted(async () => {
+  try {
+    const list = await clubsAPI.getAll()
+    clubs.value = Array.isArray(list) ? list : []
+  } catch (e) {
+    console.error('Failed to load clubs', e)
+  }
+})
+
+function onClubSaved(club) {
+  if (club && club.id) {
+    const exists = clubs.value.some(c => c.id === club.id)
+    if (!exists) clubs.value = [...clubs.value, club].sort((a, b) => (a.name || '').localeCompare(b.name || ''))
+    form.clubSelect = String(club.id)
+  }
+  showAddClubModal.value = false
+}
+
 const resetForm = () => {
   form.name = ''
+  form.dob = ''
   form.licenseLevel = ''
   form.experience = 0
-  form.club = ''
+  form.clubSelect = ''
   form.contact.email = ''
   form.contact.phone = ''
   form.certifications = ''
@@ -157,14 +203,25 @@ const handleSubmit = async () => {
   submitting.value = true
 
   try {
-    coachesStore.addCoach(form)
+    const clubId = form.clubSelect && form.clubSelect !== 'new' ? parseInt(form.clubSelect, 10) : null
+    if (form.clubSelect === 'new') {
+      error.value = 'Please add a club using "Add new club" or select an existing club.'
+      submitting.value = false
+      return
+    }
+    const payload = {
+      ...form,
+      date_of_birth: form.dob || null,
+      club_id: clubId,
+      club: undefined
+    }
+    delete payload.clubSelect
+    delete payload.dob
+    await coachesStore.addCoach(payload)
     success.value = true
-    
-    setTimeout(() => {
-      resetForm()
-    }, 2000)
+    setTimeout(() => resetForm(), 2000)
   } catch (err) {
-    error.value = 'Failed to register coach. Please try again.'
+    error.value = err?.message || 'Failed to register coach. Please try again.'
   } finally {
     submitting.value = false
   }
@@ -273,6 +330,17 @@ const handleSubmit = async () => {
 
 .btn-secondary:hover {
   background-color: var(--dark-gray);
+}
+
+.btn-add-club {
+  margin-top: 10px;
+  background: transparent;
+  color: var(--primary-green);
+  border: 2px solid var(--primary-green);
+}
+
+.btn-add-club:hover {
+  background: rgba(30, 126, 52, 0.08);
 }
 
 @media (max-width: 768px) {

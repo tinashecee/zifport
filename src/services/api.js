@@ -42,7 +42,8 @@ const apiRequest = async (endpoint, options = {}) => {
     }
 
     if (!response.ok) {
-      throw new Error(data.error || `API request failed: ${response.status} ${response.statusText}`)
+      const msg = data.message ? `${data.error} ${data.message}` : (data.error || `API request failed: ${response.status} ${response.statusText}`)
+      throw new Error(msg)
     }
 
     return data
@@ -51,7 +52,7 @@ const apiRequest = async (endpoint, options = {}) => {
     
     // Handle connection errors
     if (error.message.includes('Failed to fetch') || error.message.includes('ERR_CONNECTION_REFUSED')) {
-      throw new Error('Cannot connect to server. Please make sure the backend server is running on http://161.97.183.92:3001')
+      throw new Error('Cannot connect to server. Please make sure the backend server is running on http://localhost:3001')
     }
     
     throw error
@@ -190,11 +191,20 @@ export const refereesAPI = {
 // Clubs API
 export const clubsAPI = {
   getAll: async () => {
-    return await apiRequest('/clubs')
+    const data = await apiRequest('/clubs')
+    return data.clubs ?? data
   },
 
   getById: async (id) => {
-    return await apiRequest(`/clubs/${id}`)
+    const data = await apiRequest(`/clubs/${id}`)
+    return data.club ?? data
+  },
+
+  create: async (clubData) => {
+    return await apiRequest('/clubs', {
+      method: 'POST',
+      body: JSON.stringify(clubData)
+    })
   }
 }
 

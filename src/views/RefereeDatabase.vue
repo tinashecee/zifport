@@ -91,6 +91,7 @@
                   </td>
                   <td>
                     <button class="action-btn" @click="viewReferee(referee.id)">View</button>
+                    <button class="action-btn" @click="editReferee(referee.id)">Edit</button>
                   </td>
                 </tr>
               </tbody>
@@ -176,6 +177,10 @@ const getStatusClass = (status) => {
 
 const viewReferee = (id) => {
   router.push({ name: 'RefereeProfile', params: { id } })
+}
+
+const editReferee = (id) => {
+  router.push({ path: `/referee/${id}`, query: { edit: '1' } })
 }
 
 onMounted(async () => {

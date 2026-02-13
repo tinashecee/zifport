@@ -2,13 +2,13 @@
   <div class="user-dashboard">
     <div class="dashboard-header">
       <h2>Welcome, {{ user?.name || 'User' }}</h2>
-      <p class="user-role">Role: <span>{{ userRole }}</span></p>
+      <p class="user-role"><span>{{ userRole }}</span></p>
     </div>
 
     <div class="dashboard-grid">
       <div class="dashboard-card">
         <div class="card-icon">
-          <i class="fas fa-users"></i>
+          <i class="fas fa-user"></i>
         </div>
         <div class="card-content">
           <h3>{{ totalPlayers }}</h3>
@@ -28,7 +28,7 @@
 
       <div class="dashboard-card">
         <div class="card-icon">
-          <i class="fas fa-whistle"></i>
+          <i class="fas fa-flag"></i>
         </div>
         <div class="card-content">
           <h3>{{ totalReferees }}</h3>
@@ -63,7 +63,7 @@
           <span>Register Coach</span>
         </router-link>
         <router-link to="/registration" class="action-card">
-          <i class="fas fa-whistle"></i>
+          <i class="fas fa-flag"></i>
           <span>Register Referee</span>
         </router-link>
       </div>

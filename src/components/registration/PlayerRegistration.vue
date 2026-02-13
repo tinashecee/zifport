@@ -42,15 +42,25 @@
 
         <div class="form-group">
           <label class="form-label" for="playerClub">Club *</label>
-          <input 
-            type="text" 
-            id="playerClub" 
-            class="form-input" 
-            v-model="form.club"
-            placeholder="Enter club name" 
-            required
+          <select id="playerClub" class="form-select" v-model="form.clubSelect" required>
+            <option value="">Select club</option>
+            <option v-for="club in clubs" :key="club.id" :value="String(club.id)">{{ club.name }}</option>
+            <option value="new">My club is not listed — add new</option>
+          </select>
+          <button
+            v-if="form.clubSelect === 'new'"
+            type="button"
+            class="btn btn-outline btn-add-club"
+            @click="showAddClubModal = true"
           >
+            <span class="hover-underline-animation">Add new club</span>
+          </button>
         </div>
+        <AddClubModal
+          :is-open="showAddClubModal"
+          @close="showAddClubModal = false"
+          @saved="onClubSaved"
+        />
       </div>
 
       <div class="form-row">
@@ -147,16 +157,20 @@
 </template>
 
 <script setup>
-import { reactive, ref } from 'vue'
+import { reactive, ref, onMounted } from 'vue'
 import { usePlayersStore } from '@/stores/players'
+import { clubsAPI } from '@/services/api'
+import AddClubModal from '@/components/common/AddClubModal.vue'
 
 const playersStore = usePlayersStore()
+const clubs = ref([])
+const showAddClubModal = ref(false)
 
 const form = reactive({
   name: '',
   dob: '',
   position: '',
-  club: '',
+  clubSelect: '',
   nationality: '',
   status: '',
   availability: '',
@@ -164,6 +178,24 @@ const form = reactive({
     email: '',
     phone: '',
     address: ''
+  }
+})
+
+function onClubSaved(club) {
+  if (club && club.id) {
+    const exists = clubs.value.some(c => c.id === club.id)
+    if (!exists) clubs.value = [...clubs.value, club].sort((a, b) => (a.name || '').localeCompare(b.name || ''))
+    form.clubSelect = String(club.id)
+  }
+  showAddClubModal.value = false
+}
+
+onMounted(async () => {
+  try {
+    const list = await clubsAPI.getAll()
+    clubs.value = Array.isArray(list) ? list : []
+  } catch (e) {
+    console.error('Failed to load clubs', e)
   }
 })
 
@@ -175,7 +207,7 @@ const resetForm = () => {
   form.name = ''
   form.dob = ''
   form.position = ''
-  form.club = ''
+  form.clubSelect = ''
   form.nationality = ''
   form.status = ''
   form.availability = ''
@@ -192,25 +224,54 @@ const handleSubmit = async () => {
   submitting.value = true
 
   try {
-    const playerData = {
-      ...form,
-      stats: {
-        gamesPlayed: 0,
-        goals: 0,
-        assists: 0,
-        yellowCards: 0,
-        redCards: 0
-      }
+    // Split full name into first and last names
+    const trimmedName = (form.name || '').trim()
+    const nameParts = trimmedName.split(' ').filter(Boolean)
+    const firstName = nameParts[0] || ''
+    const lastName = nameParts.length > 1 ? nameParts.slice(1).join(' ') : firstName
+
+    // Resolve club: must select an existing club or add one via modal first
+    const clubId = form.clubSelect && form.clubSelect !== 'new' ? parseInt(form.clubSelect, 10) : null
+    if (!clubId) {
+      error.value = 'Please select a club or add a new one using "Add new club".'
+      submitting.value = false
+      return
     }
 
-    playersStore.addPlayer(playerData)
+    // Map form fields to backend player schema
+    const playerData = {
+      first_name: firstName,
+      last_name: lastName,
+      date_of_birth: form.dob,
+      nationality: form.nationality || 'Zimbabwean',
+      position: form.position,
+      club_id: clubId,
+      status: form.status || 'pending',
+      availability: form.availability || 'available',
+      email: form.contact.email || null,
+      phone: form.contact.phone || null,
+      address: form.contact.address || null,
+      international_appearances: 0,
+      international_goals: 0,
+      season_goals: 0,
+      all_time_goals: 0,
+      season_assists: 0,
+      all_time_assists: 0,
+      games_played: 0,
+      yellow_cards: 0,
+      red_cards: 0
+    }
+
+    // Actually call the API via the store and wait for it to finish
+    await playersStore.addPlayer(playerData)
     success.value = true
     
     setTimeout(() => {
       resetForm()
     }, 2000)
   } catch (err) {
-    error.value = 'Failed to register player. Please try again.'
+    console.error('Player registration failed:', err)
+    error.value = err?.message || 'Failed to register player. Please make sure you are logged in and try again.'
   } finally {
     submitting.value = false
   }
@@ -319,6 +380,17 @@ const handleSubmit = async () => {
 
 .btn-secondary:hover {
   background-color: var(--dark-gray);
+}
+
+.btn-add-club {
+  margin-top: 10px;
+  background: transparent;
+  color: var(--primary-green);
+  border: 2px solid var(--primary-green);
+}
+
+.btn-add-club:hover {
+  background: rgba(30, 126, 52, 0.08);
 }
 
 @media (max-width: 768px) {

@@ -87,6 +87,7 @@
                   </td>
                   <td>
                     <button class="action-btn" @click="viewCoach(coach.id)">View</button>
+                    <button class="action-btn" @click="editCoach(coach.id)">Edit</button>
                   </td>
                 </tr>
               </tbody>
@@ -158,6 +159,10 @@ const getStatusClass = (status) => {
 
 const viewCoach = (id) => {
   router.push({ name: 'CoachProfile', params: { id } })
+}
+
+const editCoach = (id) => {
+  router.push({ path: `/coach/${id}`, query: { edit: '1' } })
 }
 
 onMounted(async () => {

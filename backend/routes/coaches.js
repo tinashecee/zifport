@@ -52,6 +52,23 @@ router.get('/:id', async (req, res) => {
 router.post('/', async (req, res) => {
   try {
     const coachData = req.body
+    const nil = (v) => (v === undefined ? null : v)
+
+    // Map frontend form shape to DB columns (name -> first_name/last_name, licenseLevel -> license_level, etc.)
+    if (coachData.name != null && (coachData.first_name == null || coachData.last_name == null)) {
+      const parts = String(coachData.name).trim().split(/\s+/).filter(Boolean)
+      coachData.first_name = parts[0] || ''
+      coachData.last_name = parts.length > 1 ? parts.slice(1).join(' ') : coachData.first_name
+    }
+    if (coachData.licenseLevel != null && coachData.license_level == null) coachData.license_level = coachData.licenseLevel
+    if (coachData.experience != null && coachData.years_of_experience == null) coachData.years_of_experience = coachData.experience
+    if (coachData.contact && typeof coachData.contact === 'object') {
+      if (coachData.contact.email != null && coachData.email == null) coachData.email = coachData.contact.email
+      if (coachData.contact.phone != null && coachData.phone == null) coachData.phone = coachData.contact.phone
+    }
+    if (typeof coachData.certifications === 'string' && coachData.certifications.trim()) {
+      coachData.certifications = coachData.certifications.split(/\n/).map(s => s.trim()).filter(Boolean)
+    }
 
     if (!coachData.zifa_id) {
       const lastCoach = await query('SELECT zifa_id FROM coaches ORDER BY id DESC LIMIT 1')
@@ -63,6 +80,35 @@ router.post('/', async (req, res) => {
       coachData.zifa_id = `ZIFA-COACH-${String(nextId).padStart(3, '0')}`
     }
 
+    const params = [
+      coachData.zifa_id,
+      (coachData.first_name != null && String(coachData.first_name).trim()) ? String(coachData.first_name).trim() : 'Coach',
+      (coachData.last_name != null && String(coachData.last_name).trim()) ? String(coachData.last_name).trim() : 'Unknown',
+      nil(coachData.date_of_birth),
+      coachData.nationality || 'Zimbabwean',
+      coachData.license_level || 'Local',
+      nil(coachData.license_number),
+      nil(coachData.license_expiry_date),
+      JSON.stringify(coachData.certifications || []),
+      coachData.years_of_experience ?? 0,
+      nil(coachData.previous_clubs),
+      nil(coachData.achievements),
+      nil(coachData.club_id),
+      nil(coachData.team_type),
+      nil(coachData.contract_start_date),
+      nil(coachData.contract_end_date),
+      nil(coachData.email),
+      nil(coachData.phone),
+      nil(coachData.address),
+      coachData.status || 'active',
+      coachData.availability || 'available',
+      nil(coachData.photo_url),
+      JSON.stringify(coachData.documents || {}),
+      nil(coachData.bio),
+      nil(coachData.notes),
+      req.user?.id ?? nil(coachData.created_by)
+    ]
+
     const result = await query(
       `INSERT INTO coaches (
         zifa_id, first_name, last_name, date_of_birth, nationality, license_level,
@@ -71,18 +117,7 @@ router.post('/', async (req, res) => {
         contract_end_date, email, phone, address, status, availability,
         photo_url, documents, bio, notes, created_by
       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-      [
-        coachData.zifa_id, coachData.first_name, coachData.last_name,
-        coachData.date_of_birth, coachData.nationality || 'Zimbabwean',
-        coachData.license_level, coachData.license_number, coachData.license_expiry_date,
-        JSON.stringify(coachData.certifications || []), coachData.years_of_experience || 0,
-        coachData.previous_clubs, coachData.achievements, coachData.club_id,
-        coachData.team_type, coachData.contract_start_date, coachData.contract_end_date,
-        coachData.email, coachData.phone, coachData.address,
-        coachData.status || 'active', coachData.availability || 'available',
-        coachData.photo_url, JSON.stringify(coachData.documents || {}),
-        coachData.bio, coachData.notes, coachData.created_by
-      ]
+      params
     )
 
     const coaches = await query('SELECT * FROM coaches WHERE id = ?', [result.insertId])
@@ -98,18 +133,26 @@ router.put('/:id', async (req, res) => {
   try {
     const { id } = req.params
     const coachData = req.body
+    const nil = (v) => (v === undefined || v === '' ? null : v)
+    const allowedKeys = new Set([
+      'first_name', 'last_name', 'date_of_birth', 'nationality', 'license_level',
+      'license_number', 'license_expiry_date', 'certifications', 'years_of_experience',
+      'previous_clubs', 'achievements', 'club_id', 'team_type', 'contract_start_date',
+      'contract_end_date', 'email', 'phone', 'address', 'status', 'availability',
+      'photo_url', 'documents', 'bio', 'notes'
+    ])
 
     const updates = []
     const values = []
 
     Object.keys(coachData).forEach(key => {
-      if (key !== 'id' && key !== 'created_at' && key !== 'updated_at') {
-        updates.push(`${key} = ?`)
-        if ((key === 'documents' || key === 'certifications') && typeof coachData[key] === 'object') {
-          values.push(JSON.stringify(coachData[key]))
-        } else {
-          values.push(coachData[key])
-        }
+      if (key === 'id' || key === 'created_at' || key === 'updated_at' || key === 'zifa_id' || key === 'created_by') return
+      if (!allowedKeys.has(key)) return
+      updates.push(`${key} = ?`)
+      if ((key === 'documents' || key === 'certifications') && typeof coachData[key] === 'object') {
+        values.push(JSON.stringify(coachData[key]))
+      } else {
+        values.push(nil(coachData[key]))
       }
     })
 

@@ -41,7 +41,10 @@ export const authenticate = async (req, res, next) => {
       return res.status(401).json({ error: 'Token expired. Please login again.' })
     }
     console.error('Auth middleware error:', error)
-    return res.status(500).json({ error: 'Authentication error' })
+    return res.status(500).json({
+      error: 'Server error during authentication. Please try again.',
+      ...(process.env.NODE_ENV !== 'production' && { message: error.message })
+    })
   }
 }
 
