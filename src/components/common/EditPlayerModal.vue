@@ -88,6 +88,12 @@
           <textarea class="form-input form-textarea" v-model="form.address" rows="2"></textarea>
         </div>
 
+        <div class="form-group">
+          <label class="form-label">Photo / Image URL</label>
+          <input type="url" class="form-input" v-model="form.photo_url" placeholder="https://...">
+          <img v-if="form.photo_url" :src="form.photo_url" class="photo-preview" alt="Preview" @error="$event.target.style.display='none'">
+        </div>
+
         <div v-if="error" class="error-message">{{ error }}</div>
         <div v-if="successMessage" class="success-message">{{ successMessage }}</div>
 
@@ -137,7 +143,8 @@ const form = reactive({
   availability: 'available',
   email: '',
   phone: '',
-  address: ''
+  address: '',
+  photo_url: ''
 })
 
 function fillForm(p) {
@@ -153,6 +160,7 @@ function fillForm(p) {
   form.email = p.email ?? ''
   form.phone = p.phone ?? ''
   form.address = p.address ?? ''
+  form.photo_url = p.photo_url ?? ''
 }
 
 watch(() => [props.isOpen, props.player], () => {
@@ -187,7 +195,8 @@ async function handleSubmit() {
       availability: form.availability,
       email: form.email.trim() || null,
       phone: form.phone.trim() || null,
-      address: form.address.trim() || null
+      address: form.address.trim() || null,
+      photo_url: form.photo_url?.trim() || null
     }
     const data = await playersAPI.update(props.player.id, payload)
     const updated = data.player ?? data
@@ -320,6 +329,16 @@ function close() {
   margin-bottom: 12px;
   font-size: 0.9rem;
   font-weight: 600;
+}
+
+.photo-preview {
+  display: block;
+  margin-top: 8px;
+  max-width: 120px;
+  max-height: 120px;
+  object-fit: cover;
+  border-radius: var(--border-radius);
+  border: 2px solid #e5e7eb;
 }
 
 .modal-btns {
